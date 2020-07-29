@@ -1,0 +1,28 @@
+version: "3"
+services:
+  graphql-customer:
+    build: ./gc
+    links:
+      - customer-db
+    networks:
+      - event-streaming
+    ports:
+      - "9009:9009"
+         
+  customer-db:
+    image: mysql:5.7
+    ports:
+      - "3306:3306"
+    networks:
+      - event-streaming
+    environment:
+      MYSQL_HOST: customer-db
+      MYSQL_USER: sa
+      MYSQL_DATABASE: Customer
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./customerDB:/docker-entrypoint-initdb.d/:ro
+  
+networks:
+  event-streaming:
